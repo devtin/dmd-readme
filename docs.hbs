@@ -1,0 +1,36 @@
+{{#if (config "header.image")}}
+<p{{>center~}}><img{{>center}} width="480" src="{{config "header.image"}}"/></p>
+
+{{/if}}
+<div{{>center~}}><h1{{>center~}}>{{pkg "name"}}</h1></div>
+
+<p{{>center}}>
+    {{#each (config "header.badges")}}{{{this}}}
+    {{/each}}
+</p>
+
+<p{{>center}}>
+    {{{pkg "description"}}}
+</p>
+
+{{#if (config "installation")}}
+## Installation
+
+```sh
+$ npm i {{pkg "name"}} --save{{#if (config "installationDev")}}-dev{{/if}}
+# or
+$ yarn add {{pkg "name"}}{{#if (config "installationDev")}} --dev{{/if}}
+```
+{{/if}}
+
+{{>features}}
+
+{{>main}}
+
+* * *
+
+### License
+
+[MIT](https://opensource.org/licenses/MIT)
+
+&copy; 2020-present {{{author (pkg "author")}}}

@@ -1,0 +1,18 @@
+{{#if (config "features.length") }}
+{{{repeat "#" (config "features.titleLevel")}}} {{config "features.name"}}
+
+**Index**
+{{#each (features)}}
+- [{{ this.title }}](#{{kebab this.title}})
+{{/each}}
+
+{{#each (features)}}
+
+<a name="{{kebab this.title}}"></a>
+
+{{{repeat "#" (config "features.featureTitleLevel")}}} {{ this.title }}
+
+{{#if (this.description)}}{{this.description}}{{/if}}
+{{{jsCodeToMd this.code}}}
+{{/each}}
+{{/if}}
