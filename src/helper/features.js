@@ -3,6 +3,7 @@ import { deepListDirSync } from 'deep-list-dir'
 import { flattenDeep, flatten } from 'lodash'
 import { parseFileSync as parseAvaFileSync } from 'ava-to-json'
 import { finalConfig } from '../utils/final-config'
+import path from 'path'
 
 /**
  * Loads AVA test files located `config.features`
@@ -10,14 +11,13 @@ import { finalConfig } from '../utils/final-config'
 export function features () {
   const testFiles = flattenDeep(finalConfig
     .features
-    .files
+    .match
     .map(testFilePattern => {
-      return deepListDirSync(process.cwd(), { pattern: testFilePattern })
+      return deepListDirSync(path.resolve(process.cwd(), finalConfig.features.base), { pattern: testFilePattern })
     }))
 
-  return flatten(testFiles.map(found => {
-    return found
-  })
+  return flatten(testFiles
     .filter(existsSync)
-    .map(parseAvaFileSync))
+    .map(parseAvaFileSync)
+  )
 }
