@@ -24,13 +24,13 @@
   "repository": "https://github.com/devtin/dmd-readme",
   "dependencies": {
     "@devtin/schema-validator": "^2.9.0",
-    "@devtin/schema-validator-doc": "^1.0.0",
     "ava-to-json": "^1.0.0",
     "deep-list-dir": "^1.1.0",
     "lodash": "^4.17.15",
     "pkg-up": "^3.1.0"
   },
   "devDependencies": {
+    "@devtin/schema-validator-doc": "^1.0.4",
     "jsdoc-to-markdown": "^5.0.3",
     "path": "^0.12.7",
     "rollup": "^2.11.0"
