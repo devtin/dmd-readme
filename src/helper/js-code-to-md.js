@@ -9,6 +9,9 @@ const findComment = `/\\*\\*(?:\\\\\\n)?(.*?)\\n \\*/`
  * @return {string}
  */
 export function jsCodeToMd (jsCode) {
+  if (!jsCode) {
+    return ''
+  }
   // return '`` `js\n' + jsCode + '\n```'
   // breakdown jsdoc comments (no need for JSdoc in tests at the end, right?)
   const pattern = new RegExp(findComment, 'msgi')
