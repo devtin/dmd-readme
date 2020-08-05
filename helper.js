@@ -15,6 +15,7 @@ var fs = require('fs');
 var deepListDir = require('deep-list-dir');
 var lodash = require('lodash');
 var avaToJson = require('ava-to-json');
+var path = _interopDefault(require('path'));
 var trim = _interopDefault(require('lodash/trim'));
 var kebabCase_js = _interopDefault(require('lodash/kebabCase.js'));
 var repeat_js = _interopDefault(require('lodash/repeat.js'));
@@ -77,7 +78,6 @@ const ConfigSchema = new schemaValidator.Schema({
         const repositoryUrl = getRepositoryUrl(state.pkg.repository);
         return [
           `<a href="https://www.npmjs.com/package/${ state.pkg.name }" target="_blank"><img src="https://img.shields.io/npm/v/${ state.pkg.name }.svg" alt="Version"></a>`,
-          repositoryUrl ? `<a href="${ repositoryUrl }/actions?query=workflow%3Atest"><img src="${ repositoryUrl }/workflows/test/badge.svg"></a>` : null,
           '<a href="http://opensource.org/licenses" target="_blank"><img src="http://img.shields.io/badge/License-MIT-brightgreen.svg"></a>', // MIT
         ].filter(Boolean)
       }
@@ -107,7 +107,11 @@ const ConfigSchema = new schemaValidator.Schema({
       type: Number,
       default: 2
     },
-    files: {
+    base: {
+      type: String,
+      default: process.cwd()
+    },
+    match: {
       description: `AVA test files which tests we want to transform into features`,
       type: Array,
       default () {
@@ -146,16 +150,15 @@ function config (path) {
 function features () {
   const testFiles = lodash.flattenDeep(finalConfig
     .features
-    .files
+    .match
     .map(testFilePattern => {
-      return deepListDir.deepListDirSync(process.cwd(), { pattern: testFilePattern })
+      return deepListDir.deepListDirSync(path.resolve(process.cwd(), finalConfig.features.base), { pattern: testFilePattern })
     }));
 
-  return lodash.flatten(testFiles.map(found => {
-    return found
-  })
+  return lodash.flatten(testFiles
     .filter(fs.existsSync)
-    .map(avaToJson.parseFileSync))
+    .map(avaToJson.parseFileSync)
+  )
 }
 
 /**
@@ -223,6 +226,9 @@ const findComment = `/\\*\\*(?:\\\\\\n)?(.*?)\\n \\*/`;
  * @return {string}
  */
 function jsCodeToMd (jsCode) {
+  if (!jsCode) {
+    return ''
+  }
   // return '`` `js\n' + jsCode + '\n```'
   // breakdown jsdoc comments (no need for JSdoc in tests at the end, right?)
   const pattern = new RegExp(findComment, 'msgi');

@@ -1,6 +1,6 @@
 {
   "name": "dmd-readme",
-  "version": "1.0.0",
+  "version": "1.0.1-beta",
   "description": "A plugin for clean readme docs",
   "main": "index.js",
   "scripts": {
