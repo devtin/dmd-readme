@@ -31,7 +31,6 @@ export const ConfigSchema = new Schema({
         const repositoryUrl = getRepositoryUrl(state.pkg.repository)
         return [
           `<a href="https://www.npmjs.com/package/${ state.pkg.name }" target="_blank"><img src="https://img.shields.io/npm/v/${ state.pkg.name }.svg" alt="Version"></a>`,
-          repositoryUrl ? `<a href="${ repositoryUrl }/actions?query=workflow%3Atest"><img src="${ repositoryUrl }/workflows/test/badge.svg"></a>` : null,
           '<a href="http://opensource.org/licenses" target="_blank"><img src="http://img.shields.io/badge/License-MIT-brightgreen.svg"></a>', // MIT
         ].filter(Boolean)
       }
@@ -61,7 +60,11 @@ export const ConfigSchema = new Schema({
       type: Number,
       default: 2
     },
-    files: {
+    base: {
+      type: String,
+      default: process.cwd()
+    },
+    match: {
       description: `AVA test files which tests we want to transform into features`,
       type: Array,
       default () {
